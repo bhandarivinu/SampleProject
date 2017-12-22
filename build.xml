@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<project name="SampleProject" basedir="." default="build-jar">
+	
+	<property name="src.dir" value="src"/>
+		<property name="lib.dir" value="lib"/>
+		<property name="build.dir" value="build"/>
+		<property name="classes.dir" value="${build.dir}/classes"/>
+		<property name="jars.dir" value="OpJar"/>
+	
+	<target name="create-classpath" >
+			<echo>Creating Classpath</echo>
+			<path id="master-classpath">
+			      <fileset dir="${lib.dir}">
+			         <include name="*.jar"/>
+			      </fileset>
+			      <pathelement path="${classes.dir}"/>
+			   </path>
+			</target>
+	
+	<target name="clean" description="Clean output directories" >
+			<echo>Cleaning output directories</echo>
+		      <delete>
+		         <fileset dir="${classes.dir}">
+		            <include name="**/*.class"/>
+		         </fileset>
+		      	<fileset dir="${jars.dir}">
+		      		            <include name="**/*.jar"/>
+		      		         </fileset>
+		      </delete>
+		   </target>
+	
+	<target name="build" description="Compile source java files" depends="create-classpath,clean">
+		      <mkdir dir="${classes.dir}"/>
+			  <echo>Compiling java files</echo>
+			<javac destdir="${classes.dir}" source="1.7" target="1.7" includeantruntime="false">
+			         <src path="${src.dir}"/>
+			         <classpath refid="master-classpath"/>			     
+			 </javac>
+		   </target>
+	
+	<target name="build-jar" depends="build">
+		    <echo>Creating jar file</echo>
+			
+		   <jar destfile="${jars.dir}/sample.jar"
+		      basedir="${classes.dir}"
+		      includes="SamplePkg/**">
+		   	
+		   	<zipgroupfileset dir="${lib.dir}" includes="*.jar" />
+	         <manifest>
+		         <attribute name="Main-Class" value="SamplePkg.BasicSelenium"/>
+		      </manifest>
+
+		   </jar>
+		</target>
+
+</project>
+	
